@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Anniversary Surprise</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { --main: #ff4d6d; --bg: #fff0f3; }
+        body { background: var(--bg); font-family: sans-serif; text-align: center; margin: 0; padding: 20px; overflow-x: hidden; }
+        
+        .container { max-width: 450px; margin: auto; background: white; padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        /* Scratch Card Area */
+        .scratch-container {
+            position: relative; width: 250px; height: 150px; margin: 20px auto;
+            border: 2px dashed var(--main); border-radius: 15px; overflow: hidden;
+        }
+        .scratch-content {
+            position: absolute; width: 100%; height: 100%; display: flex;
+            align-items: center; justify-content: center; background: #fff;
+            color: var(--main); font-weight: bold; font-size: 18px;
+        }
+        canvas { position: absolute; top: 0; left: 0; cursor: crosshair; }
+
+        .btn {
+            background: var(--main); color: white; border: none; padding: 12px 25px;
+            border-radius: 50px; font-size: 16px; margin: 10px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        /* Heart Animation */
+        .heart { position: fixed; color: var(--main); animation: float 4s linear infinite; z-index: -1; }
+        @keyframes float { 0% { transform: translateY(110vh); opacity: 1; } 100% { transform: translateY(-10vh); opacity: 0; } }
+        
+        #finalMessage { display: none; padding: 20px; animation: zoomIn 1s; }
+        @keyframes zoomIn { from { transform: scale(0); } to { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="color: var(--main);">Happy 3 Years 6 Morth! ❤️</h2>
+    <p>ဒီနေရာလေးကို လက်နဲ့ပွတ်ပြီး (ခြစ်ပြီး) surprise ကို ကြည့်လိုက်ပါဦး ပူတူးလေး</p>
+
+    <div class="scratch-container">
+        <div class="scratch-content">
+            I Love You Forever! 💍 <br>
+            အမြဲတမ်းချစ်တယ်နော် ကလေးလေး🥰🥰
+        </div>
+        <canvas id="scratchCanvas" width="250" height="150"></canvas>
+    </div>
+
+    <button class="btn" onclick="celebrate()">အမှတ်တရ စာလွှာဖွင့်ရန်</button>
+
+    <div id="finalMessage">
+        <h3 style="color: var(--main);">"မောင်တို့နှစ်ယောက်ရဲ့ ၃ နှစ်နဲ့ ၆ လအတွက်"</h3>
+        <p>အချိန်တွေ ဘယ်လောက်ပြောင်းပြောင်း ပူတူးလေးအနားမှာ မောင်အမြဲရှိနေမှာပါ ။ ပူတူးလေးဟာ မောင့်ဘဝရဲ့ အလှပဆုံး ဆုလာဘ်တစ်ခုပါပဲအချစ်ညရင်ခုန်သံ သီချင်းလေးလိုပဲ <br> ငါ့နှလုံးသားထဲမှာ မင်းတစ်ယောက်တည်းပဲ ရှိတယ်... <br> တို့နှစ်ယောက်ရဲ့ အချစ်တွေက ထာဝရထက်ပိုပြီး <br> ခိုင်မြဲနေမှာပါ။ ချစ်တယ်! </p>
+        <img src="couple.jpg" style="width: 100%; border-radius: 15px;" alt="Together">
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://arvrtise.com/wp-content/uploads/2023/05/A-Chit-Nyar-Yin-Khon-Than.mp3"type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</div>
+
+<script>
+    // Scratch Card Logic
+    const canvas = document.getElementById('scratchCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#888';
+    ctx.fillRect(0, 0, 250, 150);
+    ctx.fillStyle = '#eee';
+    ctx.font = '16px Arial';
+    ctx.fillText('ခြစ်ကြည့်ပါ...', 80, 80);
+
+    let isDrawing = false;
+    function scratch(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mousemove', scratch);
+    canvas.addEventListener('touchstart', () => isDrawing = true);
+    canvas.addEventListener('touchend', () => isDrawing = false);
+    canvas.addEventListener('touchmove', scratch);
+
+    // အောက်တွင် သင်ပေးထားသော celebrate function အသစ်ကို အစားထိုးထည့်သွင်းထားသည်
+    function celebrate() {
+        const music = document.getElementById('bgMusic');
+        
+        // ခလုတ်နှိပ်လိုက်တဲ့အချိန်မှာ သီချင်းကို စဖွင့်ခိုင်းတာပါ
+        music.play().then(() => {
+            console.log("သီချင်း စဖွင့်ပါပြီ");
+        }).catch(error => {
+            console.log("သီချင်းဖွင့်ရတာ အခက်အခဲရှိနေပါတယ်:", error);
+            // တကယ်လို့ error တက်ရင် user ကို တစ်ချက် ပြန်နှိပ်ခိုင်းဖို့ ဒါမှမဟုတ် error message ပြဖို့ သုံးနိုင်ပါတယ်
+        });
+
+        document.getElementById('finalMessage').style.display = 'block';
+        
+        // Confetti effect
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#ff4d6d', '#ffccd5', '#ffffff']
+        });
+    }
+
+    // Floating Hearts
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+    }, 500);
+</script>
+
+</body>
+</html>
